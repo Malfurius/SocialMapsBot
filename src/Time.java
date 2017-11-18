@@ -6,19 +6,19 @@ import java.util.Date;
 public class Time {
 
     private int hrs;
-    private int sec;
+    private int min;
 
-    public Time(int hrs, int sec){
+    public Time(int hrs, int min){
         this.hrs = hrs;
-        this.sec = sec;
+        this.min = min;
     }
 
-    public int getTimeInSec(){
-        return (hrs*60)+sec;
+    public int getTimeInMin(){
+        return (hrs*60)+min;
     }
 
     public static int getNow(){
         Date now = new Date();
-        return (now.getMinutes()*60)+now.getSeconds();
+        return (now.getHours()*60)+(now.getMinutes());
     }
 }

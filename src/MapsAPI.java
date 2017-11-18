@@ -28,7 +28,7 @@ public class MapsAPI {
         return instance;
     }
 
-    public String sendRequest(String org, String dest) throws IOException {
+    public ApiResponse sendRequest(String org, String dest) throws IOException {
         String url = URLBEG;
         url += "origin=" + formatLocation(org)+"&";
         url += "destination=" + formatLocation(dest) + "&";
@@ -56,24 +56,23 @@ public class MapsAPI {
         }
         rd.close();
         //System.out.println(response.toString());
-
-        System.out.println(parseResponse(response.toString(), org, dest));
-
-        return "";
+        return  parseResponse(response.toString(), org, dest);
     }
 
-    private String parseResponse(String response, String org, String dest){
+    private ApiResponse parseResponse(String response, String org, String dest){
         Date now = new Date();
         String nowStr = now.toString();
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(response, JsonObject.class);
-        String dur = jsonObject.getAsJsonArray("routes").get(0).getAsJsonObject().getAsJsonArray("legs").get(0).getAsJsonObject().getAsJsonObject("duration").get("value").getAsString();
-        String durTraf = jsonObject.getAsJsonArray("routes").get(0).getAsJsonObject().getAsJsonArray("legs").get(0).getAsJsonObject().getAsJsonObject("duration_in_traffic").get("value").getAsString();
-        String ret = "Request: "+org+"  -->  "+dest+" ("+nowStr+") \n";
-        ret += "Response: \n";
-        ret += "duration: "+dur+"\n";
-        ret += "traffic: "+durTraf+"\n";
-        return ret;
+        try {
+            int dur = Integer.parseInt(jsonObject.getAsJsonArray("routes").get(0).getAsJsonObject().getAsJsonArray("legs").get(0).getAsJsonObject().getAsJsonObject("duration").get("value").getAsString());
+            int durTraf = Integer.parseInt(jsonObject.getAsJsonArray("routes").get(0).getAsJsonObject().getAsJsonArray("legs").get(0).getAsJsonObject().getAsJsonObject("duration_in_traffic").get("value").getAsString());
+            int distance = Integer.parseInt(jsonObject.getAsJsonArray("routes").get(0).getAsJsonObject().getAsJsonArray("legs").get(0).getAsJsonObject().getAsJsonObject("distance").get("value").getAsString());
+            ApiResponse apiResponse = new ApiResponse(org,dest,distance, dur, durTraf, now );
+            return apiResponse;
+        }catch (Exception e){
+            return new ApiResponse(org, dest, -1, -1, -1, now);
+        }
     }
 
     private String formatLocation(String loc)

@@ -14,8 +14,8 @@ public class main {
         String[] living = {"Garching bei München, 85748"};
         String[] working = {"Ostbahnhof, 81667 München", "Pasing Bf., 81241 München"};
         Interval morning = new Interval(new Time(6,0),new Time(10,0));
-        Interval evening = new Interval(new Time(15,0), new Time(20,0));
-        Runner sim = new Runner(morning,evening,15, living,working);
+        Interval evening = new Interval(new Time(11,0), new Time(20,0));
+        Runner sim = new Runner(morning,evening,1, living,working);
         try {
             sim.run(new Date(117,10,15,16,56,00));
         } catch (InterruptedException e) {

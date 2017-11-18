@@ -12,6 +12,8 @@ public class Interval {
     }
 
     public boolean contains(int d){
-        return (d>=from.getTimeInSec() && (d-10)<=to.getTimeInSec());
+        System.out.println(d);
+        System.out.println(from.getTimeInMin()+"|"+to.getTimeInMin());
+        return (d>=from.getTimeInMin() && (d-10)<=to.getTimeInMin());
     }
 }

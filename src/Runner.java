@@ -28,32 +28,36 @@ public class Runner {
             System.out.println(now.toString());
             System.out.println(start.toString());
             Thread.sleep(10000);
-        }while (now.getTime()<start.getTime());
+        }while (now.before(start));
         while(true){
+            String response = "";
             now = new Date();
             if(morning.contains(Time.getNow())){
                 for(int i = 0; i < livingLoc.length;i++){
                     for(int j = 0; j < workingLoc.length;j++){
-                        sendRequest(livingLoc[i], workingLoc[j]);
+                       response += sendRequest(livingLoc[i], workingLoc[j]).toJson()+"\n";
                     }
                 }
             }
             if(evening.contains(Time.getNow())){
                 for(int i = 0; i < workingLoc.length;i++){
                     for(int j = 0; j < livingLoc.length;j++){
-                        sendRequest(workingLoc[i], livingLoc[j]);
+                      response +=  sendRequest(workingLoc[i], livingLoc[j]).toJson()+"\n";
                     }
                 }
             }
+            new Save(response).start();
+            response = "";
             Thread.sleep(minutesBeetweenRequests*60000);
         }
     }
 
-    private void sendRequest(String org, String dest){
+    private ApiResponse sendRequest(String org, String dest){
         try {
-            MapsAPI.getInstance().sendRequest(org, dest);
+           return  MapsAPI.getInstance().sendRequest(org, dest);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
